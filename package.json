@@ -5,6 +5,8 @@
   "workspaces": ["client", "server"],
   "scripts": {
     "dev": "concurrently -k -p \"[{name}]\" -n \"SERVER,CLIENT\" -c \"blue,green\" \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "build": "npm run build --workspace=client && prisma generate && npm run build --workspace=server",
+    "start": "prisma migrate deploy && node server/dist/index.js",
     "db:migrate": "set NODE_TLS_REJECT_UNAUTHORIZED=0 && prisma migrate dev",
     "db:seed": "set NODE_TLS_REJECT_UNAUTHORIZED=0 && prisma db seed",
     "db:generate": "set NODE_TLS_REJECT_UNAUTHORIZED=0 && prisma generate",

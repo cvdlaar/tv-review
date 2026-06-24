@@ -25,7 +25,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
 // Geüploade afbeeldingen serveren als statische bestanden
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+const uploadsDir = process.env.UPLOADS_DIR || path.join(__dirname, '..', 'uploads');
+app.use('/uploads', express.static(uploadsDir));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/brands', brandsRoutes);
@@ -39,6 +40,13 @@ app.use('/api/public', publicRoutes);
 app.use('/api/uploads', uploadsRoutes);
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
+
+// Productie: serveer de Vite-build als statische bestanden en stuur alle overige routes naar index.html
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = path.join(__dirname, '..', '..', 'client', 'dist');
+  app.use(express.static(clientDist));
+  app.get('*', (_req, res) => res.sendFile(path.join(clientDist, 'index.html')));
+}
 
 app.use(errorHandler);
 
