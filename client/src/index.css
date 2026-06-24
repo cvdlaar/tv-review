@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f2f2f2;
+}
+
+/* TV canvas: no scrollbars, full coverage */
+.tv-root {
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  width: 100vw;
+  height: 100vh;
+}

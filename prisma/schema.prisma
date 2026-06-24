@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  viewer
+}
+
+enum ReviewType {
+  shop_review
+  product_review
+}
+
+enum SyncStatus {
+  running
+  success
+  error
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(viewer)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Brand {
+  id             String          @id @default(cuid())
+  name           String
+  domain         String          @unique
+  logoUrl        String?
+  channableFeedUrl String?
+  primaryColor   String          @default("#005eb8")
+  secondaryColor String          @default("#ffffff")
+  accentColor    String          @default("#e57200")
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  reviewSources  ReviewSource[]
+  shopReviews    ShopReview[]
+  productReviews ProductReview[]
+  products       Product[]
+  screens        Screen[]
+}
+
+model ReviewSource {
+  id              String          @id @default(cuid())
+  brandId         String
+  brand           Brand           @relation(fields: [brandId], references: [id])
+  type            ReviewType
+  providerName    String
+  apiUrl          String?
+  apiKeyReference String?
+  active          Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  shopReviews     ShopReview[]
+  productReviews  ProductReview[]
+}
+
+model ShopReview {
+  id               String       @id @default(cuid())
+  brandId          String
+  brand            Brand        @relation(fields: [brandId], references: [id])
+  sourceId         String
+  source           ReviewSource @relation(fields: [sourceId], references: [id])
+  externalReviewId String
+  rating           Int
+  reviewText       String
+  customerName     String?
+  reviewDate       DateTime
+  sourceName       String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@unique([externalReviewId, sourceId])
+}
+
+model ProductReview {
+  id               String       @id @default(cuid())
+  brandId          String
+  brand            Brand        @relation(fields: [brandId], references: [id])
+  sourceId         String
+  source           ReviewSource @relation(fields: [sourceId], references: [id])
+  externalReviewId String
+  sku              String
+  rating           Int
+  reviewText       String
+  customerName     String?
+  reviewDate       DateTime
+  sourceName       String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@unique([externalReviewId, sourceId])
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  brandId   String
+  brand     Brand    @relation(fields: [brandId], references: [id])
+  sku       String
+  name      String
+  url       String?
+  imageUrl  String?
+  price     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sku, brandId])
+}
+
+model SlideTemplate {
+  id               String   @id @default(cuid())
+  name             String
+  type             String
+  aspectRatio      String   @default("16:9")
+  canvasWidth      Int      @default(1920)
+  canvasHeight     Int      @default(1080)
+  backgroundConfig Json
+  elements         Json
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  screens          Screen[]
+}
+
+model Screen {
+  id                     String        @id @default(cuid())
+  name                   String
+  slug                   String        @unique
+  brandId                String?
+  brand                  Brand?        @relation(fields: [brandId], references: [id])
+  templateId             String
+  template               SlideTemplate @relation(fields: [templateId], references: [id])
+  type                   String
+  config                 Json
+  screenKey              String        @unique @default(cuid())
+  active                 Boolean       @default(true)
+  refreshIntervalMinutes Int           @default(5)
+  slideDurationSeconds   Int           @default(8)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+}
+
+model SyncLog {
+  id         String     @id @default(cuid())
+  source     String
+  status     SyncStatus
+  message    String?
+  startedAt  DateTime   @default(now())
+  finishedAt DateTime?
+}
