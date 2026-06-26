@@ -7,3 +7,4 @@ server/dist
 *.env.local
 server/uploads/*
 .git
+package-lock.json
