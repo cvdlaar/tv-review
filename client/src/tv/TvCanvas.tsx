@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 const CANVAS_W = 1920;
+const CANVAS_H = 1080;
 
 interface Props {
   children: ReactNode;
