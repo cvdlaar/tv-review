@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { TvCanvas } from './TvCanvas';
 import { SlideRenderer } from './SlideRenderer';
-import { ScreenFallbackSlide } from './ScreenFallbackSlide';
 import { fetchTvScreen } from '../api/public';
 import { TvScreenData, TvSlide, Brand, StyleOverride } from '../types';
 
@@ -12,7 +11,6 @@ export function TvScreenPage() {
   const key = searchParams.get('key') ?? '';
 
   const [data, setData] = useState<TvScreenData | null>(null);
-  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -25,10 +23,9 @@ export function TvScreenPage() {
     try {
       const result = await fetchTvScreen(slug, key);
       setData(result);
-      setError(false);
       setCurrentIndex(0);
     } catch {
-      setError(true);
+      // blijf zwart scherm tonen bij fout
     } finally {
       setLoading(false);
     }
@@ -109,13 +106,7 @@ export function TvScreenPage() {
             height: 1080,
           }}
         >
-          {loading ? (
-            <ScreenFallbackSlide type="loading" />
-          ) : error ? (
-            <ScreenFallbackSlide type="error" />
-          ) : !mappedSlide ? (
-            <ScreenFallbackSlide type="empty" />
-          ) : (
+          {mappedSlide && !loading && (
             <SlideRenderer slide={mappedSlide} brand={brand} styleOverride={styleOverride} />
           )}
         </div>
