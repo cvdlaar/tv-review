@@ -13,6 +13,7 @@ interface TokenCache { token: string; expiresAt: number }
 interface EtrustedReview {
   id: string; rating: number; comment?: string;
   submittedAt?: string; updatedAt?: string;
+  status?: string;
   reviewer?: { firstName?: string; lastName?: string; name?: string };
   product?: { sku?: string; name?: string };
 }
