@@ -6,6 +6,7 @@ primary_region = 'ams'
 [env]
   NODE_ENV = "production"
   UPLOADS_DIR = "/data/uploads"
+  PORT = "8080"
 
 [deploy]
   release_command = "npx prisma migrate deploy"
