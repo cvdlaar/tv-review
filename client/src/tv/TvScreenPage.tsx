@@ -19,7 +19,7 @@ export function TvScreenPage() {
   dataRef.current = data;
 
   const load = useCallback(async () => {
-    if (!slug || !key) { setError(true); setLoading(false); return; }
+    if (!slug || !key) { setLoading(false); return; }
     try {
       const result = await fetchTvScreen(slug, key);
       setData(result);
