@@ -20,4 +20,5 @@ ENV UPLOADS_DIR=/data/uploads
 
 EXPOSE 8080
 
-CMD ["node", "server/dist/index.js"]
+RUN chmod +x /app/server/start.sh
+CMD ["/app/server/start.sh"]
