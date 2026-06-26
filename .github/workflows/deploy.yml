@@ -16,8 +16,16 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Stel DATABASE_URL in
-        run: flyctl secrets set DATABASE_URL="${{ secrets.DATABASE_URL }}" NODE_ENV="production" --app tv-review
+      - name: Stel secrets in
+        run: |
+          flyctl secrets set \
+            DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            NODE_ENV="production" \
+            TRUSTED_SHOPS_LC_CLIENT_ID="${{ secrets.TRUSTED_SHOPS_LC_CLIENT_ID }}" \
+            TRUSTED_SHOPS_LC_CLIENT_SECRET="${{ secrets.TRUSTED_SHOPS_LC_CLIENT_SECRET }}" \
+            TRUSTED_SHOPS_LD_CLIENT_ID="${{ secrets.TRUSTED_SHOPS_LD_CLIENT_ID }}" \
+            TRUSTED_SHOPS_LD_CLIENT_SECRET="${{ secrets.TRUSTED_SHOPS_LD_CLIENT_SECRET }}" \
+            --app tv-review
 
       - name: Deploy
         run: flyctl deploy --remote-only
