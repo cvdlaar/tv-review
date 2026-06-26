@@ -17,7 +17,10 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Koppel database (eenmalig)
-        run: flyctl postgres attach tv-review-db --app tv-review || true
+        run: flyctl postgres attach tv-review-db --app tv-review 2>&1 || echo "Attach mislukt of al gedaan"
+
+      - name: Controleer DATABASE_URL
+        run: flyctl secrets list --app tv-review
 
       - name: Deploy
         run: flyctl deploy --remote-only
