@@ -1,21 +1,12 @@
-import { useEffect, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const CANVAS_W = 1920;
-const CANVAS_H = 1080;
 
 interface Props {
   children: ReactNode;
 }
 
 export function TvCanvas({ children }: Props) {
-  // Forceer viewport op 1920 zodat de Pi dezelfde basisbreedte gebruikt als desktop
-  useEffect(() => {
-    const meta = document.querySelector('meta[name="viewport"]') as HTMLMetaElement | null;
-    const original = meta?.getAttribute('content') ?? '';
-    meta?.setAttribute('content', 'width=1920, initial-scale=1');
-    return () => { meta?.setAttribute('content', original); };
-  }, []);
-
   return (
     <div
       style={{
