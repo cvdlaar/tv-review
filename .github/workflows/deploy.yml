@@ -16,11 +16,8 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Maak Postgres database aan
-        run: flyctl postgres create --name tv-review-db --region ams --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 2>&1 || echo "Database bestaat al"
-
-      - name: Koppel database aan app
-        run: flyctl postgres attach tv-review-db --app tv-review 2>&1 || echo "Al gekoppeld"
+      - name: Stel DATABASE_URL in
+        run: flyctl secrets set DATABASE_URL="${{ secrets.DATABASE_URL }}" NODE_ENV="production" --app tv-review
 
       - name: Deploy
         run: flyctl deploy --remote-only
