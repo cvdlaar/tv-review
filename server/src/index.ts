@@ -41,6 +41,13 @@ app.use('/api/uploads', uploadsRoutes);
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
+app.get('/tv-test', (_req, res) => {
+  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+  <body style="margin:0;background:#005eb8;display:flex;align-items:center;justify-content:center;height:100vh">
+  <h1 style="color:#fff;font-family:sans-serif;font-size:80px">TV werkt ✓</h1>
+  </body></html>`);
+});
+
 // Productie: serveer de Vite-build als statische bestanden en stuur alle overige routes naar index.html
 if (process.env.NODE_ENV === 'production') {
   const clientDist = path.join(__dirname, '..', '..', 'client', 'dist');
