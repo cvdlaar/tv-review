@@ -8,7 +8,7 @@ export default defineConfig({
     legacy({ targets: ['chrome >= 60'] }),
   ],
   build: {
-    target: 'chrome80',
+    target: 'chrome60',
   },
   server: {
     port: 5173,
